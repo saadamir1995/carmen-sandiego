@@ -1,0 +1,214 @@
+version: 2
+
+models:
+  # Staging Models
+  - name: stg_europe_sightings
+    description: Standardized European sightings data
+    columns:
+      - name: sighting_id
+        description: Unique identifier for each sighting
+        tests:
+          - unique
+          - not_null
+      - name: date_witness
+        description: Date when witness observed Carmen
+        tests:
+          - not_null
+      - name: region
+        description: Regional identifier
+        tests:
+          - accepted_values:
+              values: ['EUROPE']
+
+  - name: stg_asia_sightings
+    description: Standardized Asian sightings data
+    columns:
+      - name: sighting_id
+        description: Unique identifier for each sighting
+        tests:
+          - unique
+          - not_null
+      - name: region
+        description: Regional identifier
+        tests:
+          - accepted_values:
+              values: ['ASIA']
+
+  # Intermediate Models
+  - name: int_all_sightings
+    description: All regional sightings combined with enriched date fields
+    columns:
+      - name: global_sighting_id
+        description: Global unique identifier across all regions
+        tests:
+          - unique
+          - not_null
+      - name: region
+        description: Regional identifier
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['EUROPE', 'ASIA', 'AFRICA', 'AMERICA', 'AUSTRALIA', 'ATLANTIC', 'INDIAN', 'PACIFIC']
+      - name: has_weapon
+        description: Boolean indicating if Carmen was armed
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: Boolean indicating if Carmen was wearing a hat
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: Boolean indicating if Carmen was wearing a jacket
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+
+  # Core Dimension Models
+  - name: dim_agents
+    description: Dimension table for Interpol agents
+    columns:
+      - name: agent_id
+        description: Unique identifier for each agent
+        tests:
+          - unique
+          - not_null
+      - name: agent_name
+        description: Name of the agent
+        tests:
+          - not_null
+
+  - name: dim_witnesses
+    description: Dimension table for witnesses
+    columns:
+      - name: witness_id
+        description: Unique identifier for each witness
+        tests:
+          - unique
+          - not_null
+      - name: witness_name
+        description: Name of the witness
+        tests:
+          - not_null
+
+  - name: dim_locations
+    description: Dimension table for locations
+    columns:
+      - name: location_id
+        description: Unique identifier for each location
+        tests:
+          - unique
+          - not_null
+      - name: city
+        description: City name
+        tests:
+          - not_null
+      - name: country
+        description: Country code
+        tests:
+          - not_null
+
+  # Fact Table
+  - name: fact_sightings
+    description: Central fact table with all Carmen Sandiego sightings
+    columns:
+      - name: sighting_id
+        description: Unique identifier for each sighting
+        tests:
+          - unique
+          - not_null
+      - name: witness_id
+        description: Foreign key to dim_witnesses
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_witnesses')
+              field: witness_id
+      - name: agent_id
+        description: Foreign key to dim_agents
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_agents')
+              field: agent_id
+      - name: location_id
+        description: Foreign key to dim_locations
+        tests:
+          - not_null
+          - relationships:
+              to: ref('dim_locations')
+              field: location_id
+      - name: date_witness
+        description: Date of witness sighting
+        tests:
+          - not_null
+      - name: date_agent
+        description: Date of agent report filing
+        tests:
+          - not_null
+
+  # Analytics Models
+  - name: monthly_region_probability
+    description: Monthly probability analysis by region
+    columns:
+      - name: witness_month
+        description: Month of sighting (1-12)
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      - name: region
+        description: Regional identifier
+        tests:
+          - not_null
+      - name: probability_percentage
+        description: Percentage probability for the region in that month
+        tests:
+          - not_null
+
+  - name: monthly_appearance_probability
+    description: Monthly appearance characteristic probabilities
+    columns:
+      - name: witness_month
+        description: Month of sighting (1-12)
+        tests:
+          - not_null
+          - unique
+      - name: armed_jacket_no_hat_percentage
+        description: Percentage of sightings where Carmen was armed, wearing jacket, but no hat
+        tests:
+          - not_null
+
+  - name: top_behaviors
+    description: Most frequently observed behaviors
+    columns:
+      - name: behavior_rank
+        description: Rank of behavior by frequency
+        tests:
+          - unique
+          - not_null
+      - name: behavior
+        description: Observed behavior
+        tests:
+          - not_null
+      - name: occurrence_count
+        description: Number of times behavior was observed
+        tests:
+          - not_null
+
+  - name: monthly_behavior_probability
+    description: Monthly probability of exhibiting top 3 behaviors
+    columns:
+      - name: witness_month
+        description: Month of sighting (1-12)
+        tests:
+          - not_null
+          - unique
+      - name: top_3_behavior_percentage
+        description: Percentage of sightings exhibiting top 3 behaviors
+        tests:
+          - not_null

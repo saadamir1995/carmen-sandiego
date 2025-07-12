@@ -1,0 +1,53 @@
+name: 'carmen_sandiego'
+version: '1.0.0'
+config-version: 2
+
+# This setting configures which "profile" dbt uses for this project.
+profile: 'carmen_sandiego'
+
+# These configurations specify where dbt should look for different types of files.
+model-paths: ["models"]
+analysis-paths: ["analyses"]
+test-paths: ["tests"]
+seed-paths: ["seeds"]
+macro-paths: ["macros"]
+snapshot-paths: ["snapshots"]
+
+target-path: "target"
+clean-targets:
+  - "target"
+  - "dbt_packages"
+
+# Configuring models
+models:
+  carmen_sandiego:
+    # Config indicated by + and applies to all files under models/staging/
+    staging:
+      +materialized: view
+      +docs:
+        node_color: "#90EE90"
+    # Config indicated by + and applies to all files under models/intermediate/  
+    intermediate:
+      +materialized: view
+      +docs:
+        node_color: "#FFE4B5"
+    # Config indicated by + and applies to all files under models/marts/
+    marts:
+      +materialized: table
+      +docs:
+        node_color: "#87CEEB"
+      core:
+        +materialized: table
+      analytics:
+        +materialized: table
+
+# Configuring seeds - Remove column type overrides to let dbt auto-detect
+seeds:
+  carmen_sandiego:
+    +quote_columns: false
+
+vars:
+  # The start date for our data
+  start_date: '1990-01-01'
+  # The end date for our data  
+  end_date: '2025-12-31'
