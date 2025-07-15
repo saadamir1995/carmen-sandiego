@@ -20,7 +20,7 @@ with sightings_with_keys as (
 )
 
 select
-    global_sighting_id as sighting_id,
+    row_number() over (order by date_witness, region, witness, agent, city) as sighting_id,
     date_witness,
     date_agent,
     witness_id,

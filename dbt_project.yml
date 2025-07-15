@@ -2,10 +2,10 @@ name: 'carmen_sandiego'
 version: '1.0.0'
 config-version: 2
 
-# This setting configures which "profile" dbt uses for this project.
+# This setting configures which "profile" dbt uses for this project
 profile: 'carmen_sandiego'
 
-# These configurations specify where dbt should look for different types of files.
+# These configurations specify where dbt should look for different types of files
 model-paths: ["models"]
 analysis-paths: ["analyses"]
 test-paths: ["tests"]
@@ -18,36 +18,54 @@ clean-targets:
   - "target"
   - "dbt_packages"
 
-# Configuring models
 models:
   carmen_sandiego:
-    # Config indicated by + and applies to all files under models/staging/
+    # Staging layer: Views for fast development and always-fresh data
     staging:
       +materialized: view
+      +schema: staging
       +docs:
         node_color: "#90EE90"
-    # Config indicated by + and applies to all files under models/intermediate/  
+        
+    # Intermediate layer: Views for transformation logic
     intermediate:
       +materialized: view
+      +schema: intermediate
       +docs:
         node_color: "#FFE4B5"
-    # Config indicated by + and applies to all files under models/marts/
+        
+    # Marts layer: Production-ready data models
     marts:
-      +materialized: table
+      +schema: marts
       +docs:
         node_color: "#87CEEB"
+        
+      # Core: Dimensional model as tables for performance
       core:
         +materialized: table
+        +schema: core
+        
+      # Analytics: Views per assessment requirements  
       analytics:
-        +materialized: table
-
-# Configuring seeds - Remove column type overrides to let dbt auto-detect
+        +materialized: view
+        +schema: analytics
+      
+# Seed configuration
 seeds:
   carmen_sandiego:
-    +quote_columns: false
+    +quote_columns: true
 
+# Global project variables
 vars:
-  # The start date for our data
+  # Date range for analysis
   start_date: '1990-01-01'
-  # The end date for our data  
   end_date: '2025-12-31'
+  
+  # Assessment metadata
+  assessment_date: '2025-07-14'
+  
+  # Business logic variables
+  top_behaviors_limit: 3
+
+# Require dbt version (ensures compatibility)
+require-dbt-version: ">=1.0.0"

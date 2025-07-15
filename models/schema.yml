@@ -1,214 +1,861 @@
-version: 2
-
 models:
-  # Staging Models
+  # STAGING MODELS
   - name: stg_europe_sightings
-    description: Standardized European sightings data
+    description: "Standardized European sightings data from London HQ"
     columns:
-      - name: sighting_id
-        description: Unique identifier for each sighting
-        tests:
-          - unique
-          - not_null
       - name: date_witness
-        description: Date when witness observed Carmen
+        description: "Date of witness sighting"
         tests:
           - not_null
-      - name: region
-        description: Regional identifier
-        tests:
-          - accepted_values:
-              values: ['EUROPE']
-
-  - name: stg_asia_sightings
-    description: Standardized Asian sightings data
-    columns:
-      - name: sighting_id
-        description: Unique identifier for each sighting
-        tests:
-          - unique
-          - not_null
-      - name: region
-        description: Regional identifier
-        tests:
-          - accepted_values:
-              values: ['ASIA']
-
-  # Intermediate Models
-  - name: int_all_sightings
-    description: All regional sightings combined with enriched date fields
-    columns:
-      - name: global_sighting_id
-        description: Global unique identifier across all regions
-        tests:
-          - unique
-          - not_null
-      - name: region
-        description: Regional identifier
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
         tests:
           - not_null
-          - accepted_values:
-              values: ['EUROPE', 'ASIA', 'AFRICA', 'AMERICA', 'AUSTRALIA', 'ATLANTIC', 'INDIAN', 'PACIFIC']
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
       - name: has_weapon
-        description: Boolean indicating if Carmen was armed
+        description: "Was the perpetrator observed to be armed?"
         tests:
           - not_null
           - accepted_values:
               values: [true, false]
       - name: has_hat
-        description: Boolean indicating if Carmen was wearing a hat
+        description: "Was the perpetrator wearing a hat?"
         tests:
           - not_null
           - accepted_values:
               values: [true, false]
       - name: has_jacket
-        description: Boolean indicating if Carmen was wearing a jacket
+        description: "Was the perpetrator wearing a jacket?"
         tests:
           - not_null
           - accepted_values:
               values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['EUROPE']
 
-  # Core Dimension Models
+  - name: stg_asia_sightings
+    description: "Standardized Asian sightings data from Samarkand HQ"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['ASIA']
+
+  - name: stg_africa_sightings
+    description: "Standardized African sightings data from Casablanca HQ"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['AFRICA']
+
+  - name: stg_america_sightings
+    description: "Standardized American sightings data from Caracas HQ"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['AMERICA']
+
+  - name: stg_australia_sightings
+    description: "Standardized Australian sightings data from Sydney HQ"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['AUSTRALIA']
+
+  - name: stg_atlantic_sightings
+    description: "Standardized Atlantic sightings data from Canary HQ"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['ATLANTIC']
+
+  - name: stg_indian_sightings
+    description: "Standardized Indian Ocean sightings data from Reunion HQ"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['INDIAN']
+
+  - name: stg_pacific_sightings
+    description: "Standardized Pacific sightings data from Auckland HQ"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - accepted_values:
+              values: ['PACIFIC']
+
+  # INTERMEDIATE MODEL
+  - name: int_all_sightings
+    description: "All regional sightings combined with enriched date fields"
+    columns:
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: witness
+        description: "Name of witness sighting the perpetrator"
+        tests:
+          - not_null
+      - name: agent
+        description: "Name of field agent filing the report"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
+      - name: city_agent
+        description: "HQ city where field agent files the report"
+        tests:
+          - not_null
+      - name: country
+        description: "Country of sighting"
+        tests:
+          - not_null
+      - name: city
+        description: "City of sighting"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Latitude of sighting"
+      - name: longitude
+        description: "Longitude of sighting"
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional identifier"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['EUROPE', 'ASIA', 'AFRICA', 'AMERICA', 'AUSTRALIA', 'ATLANTIC', 'INDIAN', 'PACIFIC']
+      - name: witness_year
+        description: "Year extracted from witness date"
+        tests:
+          - not_null
+      - name: witness_month
+        description: "Month extracted from witness date"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      - name: year_month
+        description: "YYYY-MM format for time series analysis"
+        tests:
+          - not_null
+      - name: agent_year
+        description: "Year extracted from agent filing date"
+        tests:
+          - not_null
+      - name: agent_month
+        description: "Month extracted from agent filing date"
+        tests:
+          - not_null
+      - name: reporting_delay_days
+        description: "Days between witness sighting and agent report filing"
+        tests:
+          - not_null
+
+  # CORE DIMENSION MODELS
   - name: dim_agents
-    description: Dimension table for Interpol agents
+    description: "Dimension table containing all Interpol field agents across regions"
     columns:
       - name: agent_id
-        description: Unique identifier for each agent
+        description: "Surrogate key for each unique agent"
         tests:
           - unique
           - not_null
       - name: agent_name
-        description: Name of the agent
+        description: "Full name of the Interpol field agent"
         tests:
           - not_null
+      - name: city_agent
+        description: "Regional HQ city where agent is based"
+        tests:
+          - not_null
+      - name: region
+        description: "Regional assignment of the agent"
+        tests:
+          - not_null
+          - accepted_values:
+              values: ['EUROPE', 'ASIA', 'AFRICA', 'AMERICA', 'AUSTRALIA', 'ATLANTIC', 'INDIAN', 'PACIFIC']
 
   - name: dim_witnesses
-    description: Dimension table for witnesses
+    description: "Dimension table containing all civilian witnesses"
     columns:
       - name: witness_id
-        description: Unique identifier for each witness
+        description: "Surrogate key for each unique witness"
         tests:
           - unique
           - not_null
       - name: witness_name
-        description: Name of the witness
+        description: "Full name of the civilian witness"
+        tests:
+          - not_null
+      - name: region
+        description: "Region where witness made the sighting"
         tests:
           - not_null
 
   - name: dim_locations
-    description: Dimension table for locations
+    description: "Dimension table containing all geographic locations with coordinates"
     columns:
       - name: location_id
-        description: Unique identifier for each location
+        description: "Surrogate key for each unique location"
         tests:
           - unique
           - not_null
       - name: city
-        description: City name
+        description: "City name where sighting occurred"
         tests:
           - not_null
       - name: country
-        description: Country code
+        description: "ISO country code"
+        tests:
+          - not_null
+      - name: latitude
+        description: "Decimal latitude coordinate"
+        tests:
+          - not_null
+      - name: longitude
+        description: "Decimal longitude coordinate"
+        tests:
+          - not_null
+      - name: region
+        description: "Interpol regional jurisdiction"
         tests:
           - not_null
 
-  # Fact Table
+  # FACT TABLE 
   - name: fact_sightings
-    description: Central fact table with all Carmen Sandiego sightings
+    description: "Central fact table containing all Carmen Sandiego sighting events with globally unique IDs"
     columns:
       - name: sighting_id
-        description: Unique identifier for each sighting
+        description: "Globally unique primary key for each sighting event"
         tests:
           - unique
           - not_null
+      - name: date_witness
+        description: "Date of witness sighting"
+        tests:
+          - not_null
+      - name: date_agent
+        description: "Date of field agent filing the report"
+        tests:
+          - not_null
       - name: witness_id
-        description: Foreign key to dim_witnesses
+        description: "Foreign key to dim_witnesses"
         tests:
           - not_null
           - relationships:
               to: ref('dim_witnesses')
               field: witness_id
       - name: agent_id
-        description: Foreign key to dim_agents
+        description: "Foreign key to dim_agents"
         tests:
           - not_null
           - relationships:
               to: ref('dim_agents')
               field: agent_id
       - name: location_id
-        description: Foreign key to dim_locations
+        description: "Foreign key to dim_locations"
         tests:
-          - not_null
           - relationships:
               to: ref('dim_locations')
               field: location_id
-      - name: date_witness
-        description: Date of witness sighting
+      - name: has_weapon
+        description: "Was the perpetrator observed to be armed?"
         tests:
           - not_null
-      - name: date_agent
-        description: Date of agent report filing
+          - accepted_values:
+              values: [true, false]
+      - name: has_hat
+        description: "Was the perpetrator wearing a hat?"
         tests:
           - not_null
-
-  # Analytics Models
-  - name: monthly_region_probability
-    description: Monthly probability analysis by region
-    columns:
+          - accepted_values:
+              values: [true, false]
+      - name: has_jacket
+        description: "Was the perpetrator wearing a jacket?"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [true, false]
+      - name: behavior
+        description: "Short description of perpetrator behavior"
+      - name: region
+        description: "Regional jurisdiction of the sighting"
+        tests:
+          - not_null
+      - name: year_month
+        description: "YYYY-MM format for temporal analysis"
+        tests:
+          - not_null
+      - name: witness_year
+        description: "Year extracted from witness date"
+        tests:
+          - not_null
       - name: witness_month
-        description: Month of sighting (1-12)
+        description: "Month number (1-12) of witness sighting"
         tests:
           - not_null
           - accepted_values:
               values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      - name: agent_year
+        description: "Year extracted from agent filing date"
+        tests:
+          - not_null
+      - name: agent_month
+        description: "Month extracted from agent filing date"
+        tests:
+          - not_null
+      - name: reporting_delay_days
+        description: "Days between witness sighting and agent report filing"
+        tests:
+          - not_null
+
+  # ANALYTICS MODELS
+  - name: monthly_region_probability
+    description: "Monthly probability analysis showing Carmen's likelihood of being in each region by month"
+    columns:
+      - name: witness_month
+        description: "Month of sighting (1-12)"
+        tests:
+          - not_null
+          - accepted_values:
+              values: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+      - name: month_name
+        description: "Full month name for reporting"
+        tests:
+          - not_null
       - name: region
-        description: Regional identifier
+        description: "Regional identifier"
+        tests:
+          - not_null
+      - name: sightings_count
+        description: "Number of sightings in this region for this month"
         tests:
           - not_null
       - name: probability_percentage
-        description: Percentage probability for the region in that month
+        description: "Percentage probability for the region in that month"
+        tests:
+          - not_null
+      - name: region_rank
+        description: "Rank of region by probability for each month (1 = most likely)"
         tests:
           - not_null
 
   - name: monthly_appearance_probability
-    description: Monthly appearance characteristic probabilities
+    description: "Monthly analysis of Carmen's appearance characteristics and equipment usage"
     columns:
       - name: witness_month
-        description: Month of sighting (1-12)
+        description: "Month of sighting (1-12)"
         tests:
           - not_null
           - unique
+      - name: month_name
+        description: "Full month name"
+        tests:
+          - not_null
+      - name: total_sightings
+        description: "Total sightings for the month"
+        tests:
+          - not_null
+      - name: armed_jacket_no_hat
+        description: "Number of sightings where Carmen was armed, wearing jacket, but no hat"
+        tests:
+          - not_null
       - name: armed_jacket_no_hat_percentage
-        description: Percentage of sightings where Carmen was armed, wearing jacket, but no hat
+        description: "Percentage of sightings where Carmen was armed, wearing jacket, but no hat"
+        tests:
+          - not_null
+      - name: armed_sightings
+        description: "Number of sightings where Carmen was armed"
+        tests:
+          - not_null
+      - name: armed_percentage
+        description: "Percentage of sightings where Carmen was armed"
+        tests:
+          - not_null
+      - name: hat_sightings
+        description: "Number of sightings where Carmen wore a hat"
+        tests:
+          - not_null
+      - name: hat_percentage
+        description: "Percentage of sightings where Carmen wore a hat"
+        tests:
+          - not_null
+      - name: jacket_sightings
+        description: "Number of sightings where Carmen wore a jacket"
+        tests:
+          - not_null
+      - name: jacket_percentage
+        description: "Percentage of sightings where Carmen wore a jacket"
         tests:
           - not_null
 
   - name: top_behaviors
-    description: Most frequently observed behaviors
+    description: "Ranking of Carmen's most frequently observed behaviors"
     columns:
       - name: behavior_rank
-        description: Rank of behavior by frequency
+        description: "Rank of behavior by frequency (1 = most common)"
         tests:
-          - unique
           - not_null
       - name: behavior
-        description: Observed behavior
+        description: "Short description of perpetrator behavior"
         tests:
           - not_null
       - name: occurrence_count
-        description: Number of times behavior was observed
+        description: "Number of times this behavior was observed"
+        tests:
+          - not_null
+      - name: percentage
+        description: "Percentage of total sightings exhibiting this behavior"
         tests:
           - not_null
 
   - name: monthly_behavior_probability
-    description: Monthly probability of exhibiting top 3 behaviors
+    description: "Monthly probability of Carmen exhibiting her top 3 most common behaviors"
     columns:
       - name: witness_month
-        description: Month of sighting (1-12)
+        description: "Month of sighting (1-12)"
         tests:
           - not_null
           - unique
+      - name: month_name
+        description: "Full month name"
+        tests:
+          - not_null
+      - name: total_monthly_sightings
+        description: "Total sightings for the month"
+        tests:
+          - not_null
+      - name: top_3_behavior_sightings
+        description: "Number of sightings exhibiting top 3 behaviors"
+        tests:
+          - not_null
       - name: top_3_behavior_percentage
-        description: Percentage of sightings exhibiting top 3 behaviors
+        description: "Percentage of sightings exhibiting top 3 behaviors"
         tests:
           - not_null

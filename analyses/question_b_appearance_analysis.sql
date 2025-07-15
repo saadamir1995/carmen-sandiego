@@ -1,3 +1,4 @@
+-- Question B: Probability that Ms. Sandiego is armed AND wearing a jacket, but NOT a hat?
 {{ config(tags=['analysis', 'question_b']) }}
 
 select 
@@ -10,4 +11,4 @@ select
     jacket_percentage,
     hat_percentage
 from {{ ref('monthly_appearance_probability') }}
-order by witness_month;
+order by witness_month

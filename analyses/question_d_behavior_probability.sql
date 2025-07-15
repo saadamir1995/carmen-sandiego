@@ -1,3 +1,4 @@
+-- Question D: For each month, what is the probability Ms. Sandiego exhibits one of her three most occurring behaviors?
 {{ config(tags=['analysis', 'question_d']) }}
 
 select 
@@ -5,11 +6,6 @@ select
     month_name,
     total_monthly_sightings,
     top_3_behavior_sightings,
-    top_3_behavior_percentage,
-    case 
-        when top_3_behavior_percentage > 52 then 'HIGH'
-        when top_3_behavior_percentage > 50 then 'MEDIUM'
-        else 'LOW'
-    end as behavior_consistency_level
+    top_3_behavior_percentage
 from {{ ref('monthly_behavior_probability') }}
-order by witness_month;
+order by witness_month

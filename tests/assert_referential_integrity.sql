@@ -1,18 +1,27 @@
--- Ensure all foreign keys in fact table have corresponding dimension records
+-- Verify all foreign keys have valid references
 
-with integrity_check as (
-    select 
-        sum(case when a.agent_id is null then 1 else 0 end) as orphaned_agents,
-        sum(case when w.witness_id is null then 1 else 0 end) as orphaned_witnesses,
-        sum(case when l.location_id is null then 1 else 0 end) as orphaned_locations
+{{ config(severity='error') }}
+
+with orphaned_records as (
+    select 'fact_sightings missing agent' as issue, count(*) as count
     from {{ ref('fact_sightings') }} f
     left join {{ ref('dim_agents') }} a on f.agent_id = a.agent_id
-    left join {{ ref('dim_witnesses') }} w on f.witness_id = w.witness_id  
+    where f.agent_id is not null and a.agent_id is null
+    
+    union all
+    
+    select 'fact_sightings missing witness' as issue, count(*) as count
+    from {{ ref('fact_sightings') }} f
+    left join {{ ref('dim_witnesses') }} w on f.witness_id = w.witness_id
+    where f.witness_id is not null and w.witness_id is null
+    
+    union all
+    
+    select 'fact_sightings missing location' as issue, count(*) as count
+    from {{ ref('fact_sightings') }} f
     left join {{ ref('dim_locations') }} l on f.location_id = l.location_id
+    where f.location_id is not null and l.location_id is null
 )
 
-select *
-from integrity_check
-where orphaned_agents > 0 
-   or orphaned_witnesses > 0 
-   or orphaned_locations > 0
+select * from orphaned_records
+where count > 0

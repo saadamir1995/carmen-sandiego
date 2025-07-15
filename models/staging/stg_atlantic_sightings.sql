@@ -1,7 +1,6 @@
 {{ config(materialized='view') }}
 
 select
-    row_number() over (order by date_witness, witness, agent) as sighting_id,
     date_witness::date as date_witness,
     date_agent::date as date_agent,
     witness,
@@ -11,12 +10,12 @@ select
     city,
     country,
     region_hq as city_agent,
-    case when has_weapon = 'true' then true else false end as has_weapon,
-    case when has_hat = 'true' then true else false end as has_hat,
-    case when has_jacket = 'true' then true else false end as has_jacket,
+    {{ standardize_boolean('has_weapon') }} as has_weapon,
+    {{ standardize_boolean('has_hat') }} as has_hat,
+    {{ standardize_boolean('has_jacket') }} as has_jacket,
     behavior,
     'ATLANTIC' as region
-from {{ source('carmen_raw', 'atlantic') }}
+from {{ ref('atlantic') }}
 where date_witness is not null
   and witness is not null
   and agent is not null

@@ -11,6 +11,5 @@ with witness_data as (
 select
     row_number() over (order by witness, region) as witness_id,
     witness as witness_name,
-    region,
-    count(*) over (partition by witness) as total_sightings_reported
+    region
 from witness_data

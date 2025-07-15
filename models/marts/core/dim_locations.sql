@@ -13,11 +13,10 @@ with location_data as (
 )
 
 select
-    row_number() over (order by country, city) as location_id,
+    row_number() over (order by country, city, region) as location_id,
     city,
     country,
     latitude,
     longitude,
-    region,
-    count(*) over (partition by city, country) as total_sightings_in_location
+    region
 from location_data

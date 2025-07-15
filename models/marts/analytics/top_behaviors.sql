@@ -1,4 +1,4 @@
-{{ config(materialized='table') }}
+{{ config(materialized='view') }}
 
 with behavior_counts as (
     select
@@ -24,4 +24,3 @@ select
     round(percentage, 2) as percentage
 from ranked_behaviors
 order by behavior_rank
-limit 10

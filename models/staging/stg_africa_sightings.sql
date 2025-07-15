@@ -1,7 +1,6 @@
 {{ config(materialized='view') }}
 
 select
-    row_number() over (order by date_witness, witness, agent) as sighting_id,
     date_witness::date as date_witness,
     date_agent::date as date_agent,
     witness,
@@ -9,14 +8,20 @@ select
     latitude::decimal(10,5) as latitude,
     longitude::decimal(10,5) as longitude,
     city,
-    country,
+    case 
+        when city = 'Okahandja' and (country IS NULL OR trim(country) = '' OR upper(trim(country)) = 'NA') 
+        then 'Namibia'
+        when country IS NULL OR trim(country) = ''
+        then 'Unknown'
+        else country 
+    end as country,
     region_hq as city_agent,
-    case when has_weapon = 'true' then true else false end as has_weapon,
-    case when has_hat = 'true' then true else false end as has_hat,
-    case when has_jacket = 'true' then true else false end as has_jacket,
+    {{ standardize_boolean('has_weapon') }} as has_weapon,
+    {{ standardize_boolean('has_hat') }} as has_hat,
+    {{ standardize_boolean('has_jacket') }} as has_jacket,
     behavior,
     'AFRICA' as region
-from {{ source('carmen_raw', 'africa') }}
+from {{ ref('africa') }}
 where date_witness is not null
   and witness is not null
   and agent is not null

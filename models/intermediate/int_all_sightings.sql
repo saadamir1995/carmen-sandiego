@@ -20,8 +20,20 @@ with all_sightings as (
 
 enriched_sightings as (
     select
-        row_number() over (order by date_witness, region, witness) as global_sighting_id,
-        *,
+        date_witness,
+        date_agent,
+        witness,
+        agent,
+        latitude,
+        longitude,
+        city,
+        country,
+        city_agent,
+        has_weapon,
+        has_hat,
+        has_jacket,
+        behavior,
+        region,
         extract(year from date_witness) as witness_year,
         extract(month from date_witness) as witness_month,
         to_char(date_witness, 'YYYY-MM') as year_month,

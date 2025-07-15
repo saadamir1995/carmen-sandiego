@@ -1,7 +1,6 @@
 {{ config(materialized='view') }}
 
 select
-    row_number() over (order by sighting, citizen, officer) as sighting_id,
     sighting::date as date_witness,
     "报道"::date as date_agent,
     citizen as witness,
@@ -11,12 +10,12 @@ select
     city,
     nation as country,
     city_interpol as city_agent,
-    case when has_weapon = 'true' then true else false end as has_weapon,
-    case when has_hat = 'true' then true else false end as has_hat,
-    case when has_jacket = 'true' then true else false end as has_jacket,
+    {{ standardize_boolean('has_weapon') }} as has_weapon,
+    {{ standardize_boolean('has_hat') }} as has_hat,
+    {{ standardize_boolean('has_jacket') }} as has_jacket,
     behavior,
     'ASIA' as region
-from {{ source('carmen_raw', 'asia') }}
+from {{ ref('asia') }}
 where sighting is not null
   and citizen is not null
   and officer is not null
